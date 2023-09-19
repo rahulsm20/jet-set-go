@@ -1,0 +1,7 @@
+service: api
+
+provider: aws
+
+functions:
+  travel-api:
+    runtime
