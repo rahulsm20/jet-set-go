@@ -27,7 +27,7 @@ load_dotenv(dotenv_path=env_path)
 SECRET_KEY = os.environ["DJANGO_SECRET"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["localhost"]
 
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     "django_ratelimit.middleware.RatelimitMiddleware",
 ]
 
-ROOT_URLCONF = "django_crud_api.urls"
+ROOT_URLCONF = "jet_set_go.urls"
 
 TEMPLATES = [
     {
@@ -86,7 +86,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-WSGI_APPLICATION = "django_crud_api.wsgi.application"
+WSGI_APPLICATION = "jet_set_go.wsgi.application"
 
 
 # Database
@@ -98,9 +98,7 @@ DATABASES = {
         "NAME": os.environ["DB_NAME"],
         "USER": os.environ["DB_USER"],
         "PASSWORD": os.environ["DB_PASS"],
-        "HOST": os.environ[
-            "DB_HOST"
-        ],  # Set to the host where your PostgreSQL server is running
+        "HOST": os.environ["DB_HOST"],
         "PORT": "5432",
     }
 }

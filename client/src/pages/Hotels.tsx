@@ -9,7 +9,7 @@ const Hotels = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center gap-10 items-center">
         <HotelSearch setHotelData={setHotelData}/>
         <HotelResults hotelData={hotelData}/>
       </div>

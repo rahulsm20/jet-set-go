@@ -19,6 +19,7 @@ const DestinationCard = () => {
             const result = await axios.get(
                 import.meta.env.VITE_SERVER_URL + "/api/location/" + city
             );
+            console.log(result)
             const restaurantData = await axios.get(
                 import.meta.env.VITE_SERVER_URL + "/api/restaurants/" + result.data
             );
@@ -65,7 +66,7 @@ const DestinationCard = () => {
         ) : (
           <></>
         )}
-        {restaurants.length === 0 ? (
+        {restaurants.length < 0 ? (
           <p>Loading...</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-24 mt-10">
