@@ -1,4 +1,7 @@
-FROM python:3.8
+FROM python:3.10-alpine
+
+RUN apk update && \
+    apk add --no-cache libjpeg-turbo-dev zlib-dev libffi-dev gcc musl-dev libressl-dev
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
