@@ -35,7 +35,7 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 SECRET_KEY = os.environ["DJANGO_SECRET"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["localhost",os.environ["DEPLOY_HOST"]]
 
