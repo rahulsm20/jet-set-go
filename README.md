@@ -2,6 +2,7 @@
 
 - Index
   - [Tech Stack](#tech-stack)
+  - [Architecture](#architecture)
   - [Screenshots](#screenshots)
   - [Steps to run locally](#steps-to-run-locally)
 
