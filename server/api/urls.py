@@ -25,18 +25,19 @@ from .views import (
     LikesView,
     PostLikesView,
     DeleteLikesView,
-    FlightsView
+    FlightsView,
+    LoginView
 )
 
 urlpatterns = [
-    path("", HomeView.as_view()),
+    path("", HomeView.as_view(),name='home'),
     path("items", ItemCreateView.as_view()),
     path("items/<str:pk>", ItemDetails.as_view()),
-    path("posts", UserPostView.as_view()),
-    path("posts/<str:pk>", UserPostDetailsView.as_view()),
-    path("popular_destinations", PopularDestinationView.as_view()),
-    path("popular_destinations/<str:pk>", PopularDestinationDetails.as_view()),
-    path("flights", FlightsView.as_view()),
+    path("posts", UserPostView.as_view(),name='get-posts'),
+    path("posts/<str:pk>", UserPostDetailsView.as_view(),name='post-details'),
+    path("popular_destinations", PopularDestinationView.as_view(),name='popular-destinations'),
+    path("popular_destinations/<str:pk>", PopularDestinationDetails.as_view(),name='popular-destination-details'),
+    # path("flights", FlightsView.as_view(),name='flights'),
     path(
         "cities/autocomplete/<str:city>",
         CityAutocomplete.as_view(),
@@ -44,20 +45,21 @@ urlpatterns = [
     ),
     path("location/<str:keyword>", GetLocationId.as_view(), name="get-locationId"),
     path("restaurants/<str:locationId>", GetRestaurants.as_view(), name="restaurants"),
-    path("auth/signup", UserRegistrationView.as_view()),
-    path("auth/login", ObtainAuthToken.as_view()),
-    path("auth/verify", TokenAuthenticationView.as_view()),
-    path("auth/logout", UserLogoutView.as_view()),
+    path("auth/signup", UserRegistrationView.as_view(),name='signup'),
+    # path("auth/login", ObtainAuthToken.as_view(),name="login"),
+    path("auth/login",LoginView.as_view(),name='login'),
+    path("auth/verify", TokenAuthenticationView.as_view(),name='verify'),
+    path("auth/logout", UserLogoutView.as_view(),name='logout'),
     # path(
     #     "flights/<str:travel_type>/<str:dept>/<str:arr>/<str:date>/<int:adult_no>/<int:child_no>/<int:infant_no>/<str:cabin_class>/<str:currency>",
     #     FlightResponse.as_view(),
     # ),
-    path("flights/<str:departure>/<str:arrival>/<str:date>",FlightsView.as_view()),
-    path("comments", PostCommentsView.as_view()),
-    path("comments/<str:post>", PostCommentsDetail.as_view()),
-    path("comments/delete/<str:pk>",CommentsDetails.as_view()),
-    path("users/<str:username>",GetUserIDView.as_view()),
-    path("likes",LikesView.as_view()),
-    path("likes/delete/<str:pk>",DeleteLikesView.as_view()),
-    path("likes/<str:post>",PostLikesView.as_view())
+    path("flights/<str:departure>/<str:arrival>/<str:date>",FlightsView.as_view(),name='flights'),
+    path("comments", PostCommentsView.as_view(),name='comments'),
+    path("comments/<str:post>", PostCommentsDetail.as_view(),name='comment-details'),
+    path("comments/delete/<str:pk>",CommentsDetails.as_view(),name='comment-delete'),
+    path("users/<str:username>",GetUserIDView.as_view(),name='get-user-id'),
+    path("likes",LikesView.as_view(),name='get-likes'),
+    path("likes/delete/<str:pk>",DeleteLikesView.as_view(),name='delete-likes'),
+    path("likes/<str:post>",PostLikesView.as_view(),name='post-likes')
 ]

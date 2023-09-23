@@ -22,9 +22,9 @@ class PopularDestination(models.Model):
 
 class UserPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,blank=False)
     image = models.ImageField(upload_to="user_posts/")
-    likes = models.IntegerField(default=0,editable=True)
+    likes = models.IntegerField(default=0,editable=False,blank=True)
     caption=models.TextField(editable=True,blank=True)
 class Comments(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
@@ -35,4 +35,9 @@ class Comments(models.Model):
 class PostLikes(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=False)
-    post = models.OneToOneField(UserPost,on_delete=models.CASCADE,blank=False)
+    post = models.ForeignKey(UserPost,on_delete=models.CASCADE,blank=False)
+    class Meta:
+        # Define a unique constraint on the 'user' and 'post' fields
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'post'], name='unique_user_post_like')
+        ]

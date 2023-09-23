@@ -1,37 +1,11 @@
 import axios from "axios";
-// import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setFlights } from "../store/flightSlice";
 
 const FlightSearch = () => {
   const { register, handleSubmit } = useForm();
-  // const [data, setData] = useState([]);
   const dispatch = useDispatch();
-  // const [cityAutocomplete, setCityAutocomplete] = useState([]);
-  // const [fromCity, setFromCity] = useState("");
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFromCity(e.target.value);
-  // };
-  // useEffect(() => {
-  //   const getCities = async () => {
-  //     if (fromCity) {
-  //       const result = await axios.get(
-  //         import.meta.env.VITE_SERVER_URL +
-  //           "/api/cities/autocomplete/" +
-  //           fromCity
-  //       );
-  //       setCityAutocomplete(result.data.results);
-  //       console.log(cityAutocomplete);
-  //     }
-  //   };
-  //   getCities();
-  // }, [fromCity]);
-
-  // const flights = data.map((flight)=>{
-  //   return()
-  // })
 
   const getFlights=async(requestData:FieldValues)=>{
     const from = requestData.from.trim()
@@ -45,7 +19,7 @@ const FlightSearch = () => {
       onSubmit={handleSubmit((data) => getFlights(data))}
       className="bg-zinc-950 border border-zinc-800 rounded-xl  p-5 mt-10 gap-5 flex flex-col"
     >
-      <div className="flex gap-5 justify-start items-start">
+      <div className="flex lg:flex-row flex-col gap-5 justify-start items-start">
         <div className="flex flex-col items-start">
           <label htmlFor="from">From</label>
           <input

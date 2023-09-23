@@ -1,8 +1,30 @@
-import { FormEvent } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { signup } from "../api";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
+type FormInputs={
+  username:string;
+  password:string;
+  confirm_password:string;
+  email:string;
+}
+
 
 const SignupForm = () => {
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+  const {register, handleSubmit,watch,formState: { errors }} = useForm<FormInputs>();
+  const [userExists,setUserExists] = useState(false);
+  const signupHandler = async(data:FieldValues) => {
+    // e.preventDefault();
+    try{
+      await signup(data);
+      navigate('/login');
+    }
+    catch(err){
+      console.error("Error signup up user:",err)
+      setUserExists(true)
+    }
   };
   return (
     <div className="grid md:flex gap-2 grid-cols-1 md:grid-cols-2 justify-center items-center">
@@ -25,7 +47,7 @@ const SignupForm = () => {
       <div className="flex flex-col justify-start items-center mt-10 gap-5">
         <form
           className="flex flex-col gap-5 bg-zinc-950 p-10 m-10 rounded-xl border-2 border-zinc-900 text-center w-96"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit((data)=>signupHandler(data))}
         >
           <div className="flex gap-3">
             <p className="text-2xl font-medium">Signup </p>
@@ -37,19 +59,43 @@ const SignupForm = () => {
               type="username"
               className="input bg-zinc-900"
               placeholder="Enter username"
+              required={true}
+              {...register("username",{minLength:5,required:true})}
+            ></input>
+            {errors.username && <span className="text-red-500 font-light">Username should be atleast 5 characters long</span>}
+            {userExists ? <span className="text-red-500">User with that username already exists</span>:<></>}
+             <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              className="input bg-zinc-900"
+              placeholder="Enter email"
+              required={true}
+              {...register("email",{minLength:5,required:true,pattern:/^\S+@\S+$/i })}
             ></input>
             <label htmlFor="password">Password</label>
             <input
               type="password"
               className="input bg-zinc-900"
               placeholder="Enter password"
+              required={true}
+              {...register("password",{minLength:5})}
             ></input>
+            {errors.password && <span className="text-red-500 font-light">Password should be atleast 5 characters long</span>}
             <label htmlFor="password">Confirm Password</label>
             <input
               type="password"
               className="input bg-zinc-900"
               placeholder="Enter password again"
-            ></input>
+              required={true}
+              {...register("confirm_password", {
+                validate: (val: string) => {
+                  if (watch('password') != val) {
+                    return "Your passwords do no match";
+                  }
+                },
+               })}
+               ></input>
+               {errors.confirm_password && <span className="text-red-500 font-light">Passwords do not match</span>}
           </div>
           <button className="btn btn-primary normal-case"> Signup </button>
           <p>

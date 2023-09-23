@@ -57,6 +57,8 @@ const PostModal: React.FC<PostModalProps> = ({ post, comments,setComments }) => 
           post: post.id,
           user: user.user_id,
           content: content,
+        },{
+          withCredentials:true
         }
       );
       setComments([...comments,comment.data])
@@ -67,7 +69,9 @@ const PostModal: React.FC<PostModalProps> = ({ post, comments,setComments }) => 
 
   const deleteComment = async(id:string)=>{
     try{
-      const result = await axios.delete(import.meta.env.VITE_SERVER_URL+"/api/comments/delete/"+id)
+      const result = await axios.delete(import.meta.env.VITE_SERVER_URL+"/api/comments/delete/"+id,{
+        withCredentials:true
+      })
       if(result.data.length==0){
         const updatedComments = comments.filter((comment) => comment.id !== id);
         setComments(updatedComments);

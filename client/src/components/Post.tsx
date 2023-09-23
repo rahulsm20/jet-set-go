@@ -15,6 +15,7 @@ const Post = ({ post }: PostProps) => {
   const [comments, setComments] = useState<CommentType[]>([]);
   const [likes, setLikes] = useState<LikesType[]>([]);
   const [liked, setLiked] = useState(false);
+  const [likeId,setLikeId] = useState("");
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
@@ -23,7 +24,9 @@ const Post = ({ post }: PostProps) => {
   const getComments = async () => {
     try {
       const result = await axios.get(
-        import.meta.env.VITE_SERVER_URL + "/api/comments/" + post.id
+        import.meta.env.VITE_SERVER_URL + "/api/comments/" + post.id,{
+          withCredentials:true
+        }
       );
       setComments(result.data);
     } catch (err) {
@@ -34,44 +37,58 @@ const Post = ({ post }: PostProps) => {
   const getLikes = async () => {
     try {
       const likeResults = await axios.get(
-        import.meta.env.VITE_SERVER_URL + "/api/likes/" + post.id
+        import.meta.env.VITE_SERVER_URL + "/api/likes/" + post.id,{
+          withCredentials:true
+        }
       );
       setLikes(likeResults.data);
 
     const userLiked = likeResults.data.some((like:LikesType) => like.user === user.user_id);
-
-    // Update the liked state based on whether the user has liked the post
+    const userLikeId = likeResults.data.map((like:LikesType)=>like.id)
+    setLikeId(userLikeId) 
     setLiked(userLiked);
-
-    // Update the likes state with the fetched data
-    // setLikes(likeResults.data);
-
-      console.log(likeResults.data);
     } catch (err) {
       console.error("Error getting likes " + err);
     }
   };
 
   const likeHandler = async () => {
-    try {
-      const result = await axios.post(
-        import.meta.env.VITE_SERVER_URL + "/api/likes",
+    if(!liked){
+      try {
+        const result = await axios.post(
+          import.meta.env.VITE_SERVER_URL + "/api/likes",
         {
           post: post.id,
           user: user.user_id,
+        },{
+          withCredentials:true
         }
         );
         setLiked(!liked);
-      console.log(result);
-    } catch (err) {
+        console.log(result);
+      } catch (err) {
       console.error("Error liking post" + err);
     }
+  }
+  else{
+    try{
+      const result = await axios.delete(
+        import.meta.env.VITE_SERVER_URL +'/api/likes/delete/' + likeId,{
+          withCredentials:true
+        }
+      )
+      setLiked(!liked)
+      console.log(result)
+    }
+    catch(err){
+      console.error("Error liking post" + err);
+    }
+  }
   };
   useEffect(() => {
     getComments();
     getLikes();
   }, []);
-  console.log(liked)
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-col bg-zinc-950  justify-start items-start  mt-10 rounded-2xl">
@@ -97,7 +114,7 @@ const Post = ({ post }: PostProps) => {
         <div className="flex justify-center  items-start p-5 gap-3 flex-col">
           <p>
             {likes.length > 0 ? (
-              <span>{likes.length} likes</span>
+              <span>{post.likes} likes</span>
             ) : (
               <span>No likes yet</span>
             )}

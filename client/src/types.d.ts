@@ -27,7 +27,7 @@ export type FlightDetailsProps = {
     FLSDepartureDateTime: string;
     FLSArrivalName: string;
     FLSDepartureName: string;
-    FlightLegDetails: FlightLegDetails[];
+    FlightLegDetails: FlightLegDetails[] | FlightLegDetails;
   };
 };
 
@@ -94,4 +94,9 @@ export type DestinationDataType = {
 
 export type HotelResultsType = {
   hotelData:HotelDataType[]
+}
+
+export type UserDetails ={
+  username:string,
+  password:string
 }

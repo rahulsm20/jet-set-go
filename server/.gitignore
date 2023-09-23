@@ -62,3 +62,7 @@ node_modules/
 
 staticfiles/
 
+.serverless
+nginx-config
+
+backups

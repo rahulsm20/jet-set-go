@@ -18,7 +18,7 @@ const RestaurantCard = ({ restaurantData }: RestaurantDetailsType) => {
             <span>{restaurantData.userReviewCount} Reviews</span>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {tags.map((tag,key) => {
             return <p className="badge bg-primary text-white p-4" key={key}>{tag}</p>;
           })}

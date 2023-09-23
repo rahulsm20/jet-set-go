@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
+import { fetchPopularDestinations } from "../api";
+import NewPostModal from "../components/NewPostModal";
+import { useSelector } from "react-redux";
+import { RootState } from "../types";
 
 type PostDataType = {
   destination_id: string;
@@ -17,15 +21,14 @@ type PostDataType = {
 // };
 
 const Home = () => {
+
+  const isAuthenticated = useSelector((state:RootState)=>state.auth.isAuthenticated)
   const [postData, setPostsData] = useState<PostDataType[]>(null || []);
   const [userPostData, setUserPostData] = useState([]);
-  // const [comments, setComments] = useState([]);
 
   const getPosts = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8000/api/popular_destinations"
-      );
+      const response = await fetchPopularDestinations();
       setPostsData(response.data);
     } catch (error) {
       console.error("Error fetching image URL:", error);
@@ -48,23 +51,18 @@ const Home = () => {
     getUserPosts();
   }, []);
 
-  // const posts = postData.map((post,key)=>{
-  //   return(
-  //     <POICard id={post.destination_id} title={post.city_name} image_url={post.image} key={key}/>
-  //   )
-  // })
   const posts = userPostData.map((post, key) => {
     return <Post post={post} key={key} />;
   });
   return posts ? (
     <div>
       <Navbar />
-      <div className="mx-10 flex flex-col justify-center items-center">
+      <div className="mx-10 flex flex-col justify-center items-center gap-5">
         <p className="mt-10 mx-10 text-3xl">
           Popular destinations right now 🗺️
         </p>
         <div className="mt-5 mx-10 flex gap-2">
-          {postData.map((post,key) => {
+          {postData.map((post, key) => {
             return (
               <Link to={"/destinations/" + post.destination_id} key={key}>
                 <p className="badge bg-red-600 text-white p-4 hover:bg-red-800">
@@ -74,7 +72,12 @@ const Home = () => {
             );
           })}
         </div>
-        <div className="flex flex-col items-center justify-center md:w-2/5">
+        {
+          isAuthenticated ?
+        <NewPostModal />: 
+        <></>
+        }
+        <div className="flex flex-col items-center justify-center md:w-2/4">
           <div className="grid md:grid-cols-1 gap-5 m-10">{posts}</div>
         </div>
       </div>

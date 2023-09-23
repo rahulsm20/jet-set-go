@@ -1,17 +1,19 @@
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
 import requests
+from django.contrib.auth import authenticate, login
 import xml.etree.ElementTree as ET
+from django.shortcuts import redirect
+from django.urls import reverse
 from rest_framework import generics
-from django.views.decorators.http import require_http_methods
 from .models import Item, Post, PopularDestination, UserPost, Comments, PostLikes
-from django_ratelimit.decorators import ratelimit
-from rest_framework import request
 from rest_framework.response import Response
 import requests
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 import os
 from rest_framework.views import APIView
 from .serializers import (
@@ -99,18 +101,17 @@ class PostCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Post.objects.all()
         return queryset
-
-
 class PostView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class PopularDestinationView(generics.ListCreateAPIView):
     serializer_class = PopularDestinationSerializer
     queryset = PopularDestination.objects.all()
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class PopularDestinationDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PopularDestinationSerializer
     queryset = PopularDestination.objects.all()
@@ -140,7 +141,7 @@ def xml_to_dict(element):
             result[child_tag] = child_data
     return result
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class FlightsView(APIView):
     def get(self, request,departure,arrival,date):
         url = "https://timetable-lookup.p.rapidapi.com/TimeTable/"+departure+"/"+arrival+"/"+date
@@ -162,8 +163,6 @@ class FlightsView(APIView):
 
 
 class CityAutocomplete(APIView):
-    # @require_http_methods(["GET"])
-    # @ratelimit(key="ip", rate="10/m", method="GET", block=False)
     def get(self, request, city):
         url = "https://world-airports-directory.p.rapidapi.com/v1/airports/" + city
 
@@ -178,7 +177,7 @@ class CityAutocomplete(APIView):
 
         return Response(response.json(), status=response.status_code)
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class GetLocationId(APIView):
     def get(self, request, keyword):
         url = "https://tripadvisor16.p.rapidapi.com/api/v1/restaurant/searchLocation"
@@ -195,7 +194,7 @@ class GetLocationId(APIView):
         data = response.json()
         return Response(data["data"][0]["locationId"], status=response.status_code)
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class GetRestaurants(APIView):
     def get(self, request, locationId):
         url = "https://tripadvisor16.p.rapidapi.com/api/v1/restaurant/searchRestaurants"
@@ -237,40 +236,34 @@ class UserRegistrationView(generics.CreateAPIView):
 
 
 class TokenAuthenticationView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user  # Authenticated user
+        user = request.user
         return Response(
             {"message": "Token is valid", "user": user.username},
             status=status.HTTP_200_OK,
         )
 
+from django.contrib.auth import logout
 
 class UserLogoutView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
-        request.auth.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+        logout(request)
+        return redirect(reverse('home')) 
 
 class UserPostView(generics.ListCreateAPIView):
     serializer_class = UserPostSerializer
     queryset = UserPost.objects.all()
 
-
 class UserPostDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserPostSerializer
     queryset = UserPost.objects.all()
 
-
 class PostCommentsView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     queryset = Comments.objects.all()
-
 
 class PostCommentsDetail(generics.ListAPIView):
     serializer_class = CommentSerializer
@@ -294,7 +287,6 @@ class GetUserIDView(generics.ListAPIView):
         queryset = User.objects.filter(username=username)
         return queryset
 
-
 class CommentsDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     queryset = Comments.objects.all()
@@ -317,3 +309,18 @@ class PostLikesView(generics.ListAPIView):
         post = self.kwargs["post"]
         queryset = PostLikes.objects.filter(post=post)
         return queryset
+
+class LoginView(generics.CreateAPIView):
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            response = Response({'message': 'Login successful'})
+            response["Access-Control-Allow-Origin"] = "http://localhost:5173"  
+            response["Access-Control-Allow-Credentials"] = "true"
+            print(response)
+            return response
+        else:
+            return Response({"error": "Invalid credentials"})
