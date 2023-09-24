@@ -1,5 +1,5 @@
 """
-WSGI config for django_crud_api project.
+WSGI config for jet_set_go project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,8 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_crud_api.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jet_set_go.settings')
 
 application = get_wsgi_application()
+
+app = application

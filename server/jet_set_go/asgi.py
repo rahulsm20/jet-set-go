@@ -1,5 +1,5 @@
 """
-ASGI config for django_crud_api project.
+ASGI config for jet_set_go project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -15,4 +15,4 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jet_set_go.settings')
 
 application = get_asgi_application()
 
-app = application
+# app = application
