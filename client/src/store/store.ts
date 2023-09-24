@@ -1,4 +1,3 @@
-// store.js
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice'; 
 import flightReducer from './flightSlice'

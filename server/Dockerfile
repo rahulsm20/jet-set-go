@@ -3,7 +3,6 @@ FROM python:3.10-alpine
 RUN apk update && \
     apk add --no-cache libjpeg-turbo-dev zlib-dev libffi-dev gcc musl-dev libressl-dev
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
@@ -17,4 +16,4 @@ COPY . /app/
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "--config", "gunicorn_config.py", "jet_set_go.wsgi:application"]
