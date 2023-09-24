@@ -1,0 +1,13 @@
+{
+    "builds": [{
+        "src": "jet_set_go/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "jet_set_go/wsgi.py"
+        }
+    ]
+}
