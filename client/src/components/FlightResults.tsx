@@ -76,7 +76,7 @@ const FlightResults = ({ flightDetails }: FlightDetailsProps) => {
                     <div className="flex flex-col gap-5 text-white justify-start items-start border-b border-zinc-700  p-10  " key={key}>
                       Leg {key + 1}
                       <div
-                        className="flex justify-start items-start  gap-5"
+                        className="flex flex-col md:flex-row justify-start items-start  gap-5"
                         key={key}
                       >
                         <div>

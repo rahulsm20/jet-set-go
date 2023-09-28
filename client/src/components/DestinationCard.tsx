@@ -24,10 +24,10 @@ const DestinationCard = () => {
                 import.meta.env.VITE_SERVER_URL + "/api/restaurants/" + result.data,
             );
             setRestaurants(restaurantData.data);
-            localStorage.setItem(
-                "restaurantData",
-                JSON.stringify(restaurantData.data)
-            );
+            // localStorage.setItem(
+            //     "restaurantData",
+            //     JSON.stringify(restaurantData.data)
+            // );
         } catch (error) {
             console.error("Error fetching restaurant data:", error);
         }
@@ -49,7 +49,7 @@ const DestinationCard = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-col bg-zinc-950 border-2 border-zinc-700 justify-center items-start mt-10 gap-2 w-2/4 rounded-2xl">
+      <div className="flex flex-col bg-zinc-950 border-2 border-zinc-700 justify-center items-start mt-10 gap-2 w-2/3 lg:w-2/4 rounded-2xl">
         <div className="flex justify-end">
           <p className="md:text-5xl italic font-light absolute p-2 md:p-5 text-black bg-white rounded-l-2xl rounded-t-2xl">
             {destinationData.city_name}

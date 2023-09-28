@@ -12,12 +12,12 @@ const Flights = () => {
       <Navbar />
       <div className="flex flex-col  gap-5 justify-center items-center">
         <FlightSearch />
-        <div className="p-10">
+        <div className="md:p-10">
           {flights.length > 0 ? (
-            <div className="flex items-start flex-col gap-5">
+            <div className="flex justify-center items-center md:items-start flex-col gap-5">
               <h1 className="font-light">Results</h1>
               <p>All times are local</p>
-              <div className="flex flex-col justify-start item-start gap-5">
+              <div className="flex flex-col justify-center items-center md:items-start gap-5">
                 {flights.map((flight, key) => {
                   return <FlightResults flightDetails={flight} key={key} />;
                 })}
