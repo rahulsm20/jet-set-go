@@ -34,8 +34,11 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ["DJANGO_SECRET"]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ["DEBUG_MODE"]
+debug_mode_str = os.environ.get("DEBUG_MODE", "False")
+
+DEBUG_MODE = debug_mode_str.lower() == "true"
+
+DEBUG = DEBUG_MODE
 
 ALLOWED_HOSTS = ["localhost",os.environ["DEPLOY_HOST"],'.vercel.app']
 
