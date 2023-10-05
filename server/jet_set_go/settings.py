@@ -57,9 +57,12 @@ INSTALLED_APPS = [
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",os.environ["CLIENT_URL"]
+    "http://localhost:5173",os.environ["CLIENT_URL"],"http://127.0.0.1:5173"
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_DOMAIN=os.environ["CLIENT_URL"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
