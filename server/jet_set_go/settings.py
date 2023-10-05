@@ -35,7 +35,7 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 SECRET_KEY = os.environ["DJANGO_SECRET"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ["DEBUG_MODE"]
 
 ALLOWED_HOSTS = ["localhost",os.environ["DEPLOY_HOST"],'.vercel.app']
 
@@ -62,7 +62,10 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_DOMAIN=os.environ["CLIENT_URL"]
+if DEBUG:
+    SESSION_COOKIE_DOMAIN='localhost'
+else:
+    SESSION_COOKIE_DOMAIN=os.environ["CLIENT_DOMAIN"]   
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -83,11 +86,8 @@ SESSION_COOKIE_NAME = 'sessionid'
 
 CACHES = {
     'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.environ['REDIS_URL'],
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.environ['REDIS_URL']
     }
 }
 

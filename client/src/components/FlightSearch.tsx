@@ -24,7 +24,7 @@ const FlightSearch = () => {
           <label htmlFor="from">From</label>
           <input
             {...register("from")}
-            placeholder="Enter departure city"
+            placeholder="Departure IATA code"
             className="input"
             id="from"
             // onChange={handleInputChange}
@@ -42,7 +42,7 @@ const FlightSearch = () => {
           <input
             {...register("to")}
             className="input"
-            placeholder="Enter Arrival City"
+            placeholder="Arrival IATA code"
             id="to"
           />
         </div>

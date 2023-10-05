@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -241,12 +242,10 @@ class TokenAuthenticationView(APIView):
 
     def get(self, request):
         user = request.user
-        return Response(
-            {"message": "Token is valid", "user": user.username},
-            status=status.HTTP_200_OK,
-        )
-
-from django.contrib.auth import logout
+        response_data = {"message": "Token is valid", "user": user.username}
+        response = Response(response_data, status=status.HTTP_200_OK)
+        response["Cache-Control"] = "no-store, max-age=0"
+        return response
 
 class UserLogoutView(APIView):
     def post(self, request):

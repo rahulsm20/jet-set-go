@@ -44,8 +44,8 @@ const Post = ({ post }: PostProps) => {
       setLikes(likeResults.data);
 
     const userLiked = likeResults.data.some((like:LikesType) => like.user === user.user_id);
-    const userLikeId = likeResults.data.map((like:LikesType)=>like.id)
-    setLikeId(userLikeId) 
+    const currentLikeId = likeResults.data.find((like:LikesType)=>like.user===user.user_id)
+    setLikeId(currentLikeId.id) 
     setLiked(userLiked);
     } catch (err) {
       console.error("Error getting likes " + err);
