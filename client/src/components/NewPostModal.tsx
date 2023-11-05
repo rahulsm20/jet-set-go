@@ -61,6 +61,15 @@ const NewPostModal = () => {
               onSubmit={handleSubmit((data) => createPost(data))}
               className="flex flex-col justify-center items-center gap-5"
             >
+              <label htmlFor="image" className="btn normal-case btn-transparent bg-blue-500 text-white hover:bg-blue-400">Upload an image</label>
+              <input
+                {...register("image")}
+                type="file"
+                id="image"
+                accept="image/*"
+                name="image"
+                className="hidden"
+              />
               <input
                 {...register("caption")}
                 type="text"
@@ -69,13 +78,6 @@ const NewPostModal = () => {
                 className="input"
                 placeholder="Enter caption"
                 required
-              />
-              <input
-                {...register("image")}
-                type="file"
-                id="image"
-                accept="image/*"
-                name="image"
               />
 
               <button type="submit" className="btn btn-primary normal-case">

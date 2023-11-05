@@ -2,8 +2,11 @@ import React, { FormEvent, useState } from "react";
 import getHotels from "../api/getHotels";
 import getLocation from "../api/getLocation";
 import { HotelSearchFormProps, locationDataProps } from "../types";
+import { useDispatch } from "react-redux";
+import { setHotels } from "../store/hotelSlice";
 
 const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
+  const dispatch = useDispatch()
   const [city, setCity] = useState("");
   const [locationData, setLocationData] = useState<locationDataProps>();
   const [formData, setFormData] = useState({
@@ -36,7 +39,8 @@ const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
   const handleSubmit = async (e:FormEvent) => {
     e.preventDefault();
     try {
-      await getDestinationID(city).then(() => console.log(locationData));
+      const locationData = await getDestinationID(city)
+      setLocationData(locationData)
       if(locationData){
         setFormData({
           ...formData,
@@ -44,8 +48,10 @@ const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
           dest_id: locationData.dest_id,
         });
       }
+      if(formData.dest_id&&formData.dest_type){
+        getHotelInfo();
+      }
       console.log(formData);
-      getHotelInfo();
     } catch (err) {
       console.log(err);
     }
@@ -54,7 +60,7 @@ const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
   const getDestinationID = async (city:string) => {
     const locationData = await getLocation(city);
     console.log(locationData)
-    setLocationData(locationData);
+    return locationData
   };
 
   const getHotelInfo = async () => {
@@ -62,12 +68,14 @@ const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
       adults_number: formData.adults_number,
       checkin_date: formData.checkin_date,
       dest_id: formData.dest_id,
+      // children_number:formData.children_number,
       checkout_date: formData.checkout_date,
       room_number: parseInt(formData.room_number),
       dest_type: formData.dest_type,
     });
-    localStorage.setItem("hotelData", JSON.stringify(hotelData));
+    // localStorage.setItem("hotelData", JSON.stringify(hotelData));
     setHotelData(hotelData);
+    dispatch(setHotels(hotelData))
   };
 
   return (

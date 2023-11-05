@@ -10,14 +10,25 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [error,setError] = useState("")
   const onSubmit = async (data: FieldValues) => {
-    setLoading(true);
-    const result = await login(data);
-    if (result.data.message == "Login successful") {
-      dispatch(setAuthenticated(true));
+    try{
+      setLoading(true);
+      const result = await login(data);
+      if (result.data.message == "Login successful") {
+        dispatch(setAuthenticated(true));
+        navigate("/");
+      }
+      else{
+        setError("Please enter valid credentials")   
+      }
     }
-    navigate("/");
-    console.log(result.data.message);
+    catch(err){
+      console.log(`${err}`)
+      setError("Please enter valid credentials")
+      // console.log(result.data.message);
+    }
+    setLoading(false)
   };
   return (
     <div className="flex flex-col justify-start items-center mt-10 gap-5">
@@ -66,6 +77,7 @@ const LoginForm = () => {
           </a>
         </p>
       </form>
+      {error ? <span className="text-red-500">{error}</span> : <></>}
     </div>
   );
 };

@@ -25,6 +25,7 @@ const Home = () => {
   const isAuthenticated = useSelector((state:RootState)=>state.auth.isAuthenticated)
   const [postData, setPostsData] = useState<PostDataType[]>(null || []);
   const [userPostData, setUserPostData] = useState([]);
+  const [loading,setLoading] = useState(true);
 
   const getPosts = async () => {
     try {
@@ -49,12 +50,13 @@ const Home = () => {
   useEffect(() => {
     getPosts();
     getUserPosts();
+    setLoading(false);
   }, []);
 
   const posts = userPostData.map((post, key) => {
     return <Post post={post} key={key} />;
   });
-  return posts ? (
+  return !loading ? (
     <div>
       <Navbar />
       <div className="mx-10 flex flex-col justify-center items-center gap-5">
@@ -75,7 +77,7 @@ const Home = () => {
         {
           isAuthenticated ?
         <NewPostModal />: 
-        <></>
+        <Link to="/login" className="btn normal-case btn-transparent bg-slate-200 text-black hover:bg-white rounded-lg">Login to create posts</Link>
         }
         <div className="flex flex-col items-center justify-center md:w-2/4">
           <div className="grid md:grid-cols-1 gap-5 m-10">{posts}</div>

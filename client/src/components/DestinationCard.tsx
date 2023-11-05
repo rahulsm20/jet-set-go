@@ -58,7 +58,7 @@ const DestinationCard = () => {
         </div>
         <p className="p-5">{destinationData.description}</p>
       </div>
-      <div className="p-10 mt-2 mx-10">
+      <div className="lg:p-40 mt-2 mx-10">
         {destinationData.city_name ? (
           <p className="text-2xl font-medium">
             Restaurants in {destinationData.city_name}
@@ -67,9 +67,9 @@ const DestinationCard = () => {
           <></>
         )}
         {restaurants.length === 0 ? (
-          <p>Loading...</p>
+          <img src="/loading.svg"/>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-24 mt-10">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-3 lg:gap-24 mt-10">
             {restaurants.map((restaurant, key) => {
               return <RestaurantCard restaurantData={restaurant} key={key} />;
             })}

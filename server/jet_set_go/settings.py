@@ -34,7 +34,7 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ["DJANGO_SECRET"]
 
-debug_mode_str = os.environ.get("DEBUG_MODE", "False")
+debug_mode_str = os.environ.get("DEBUG_MODE")
 
 DEBUG_MODE = debug_mode_str.lower() == "true"
 

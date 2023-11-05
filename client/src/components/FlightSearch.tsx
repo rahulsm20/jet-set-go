@@ -27,15 +27,7 @@ const FlightSearch = () => {
             placeholder="Departure IATA code"
             className="input"
             id="from"
-            // onChange={handleInputChange}
           />
-          {/* <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={cityAutocomplete}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="From" {...register("from")} onChange={handleInputChange}/>}
-          /> */}
         </div>
         <div className="flex flex-col items-start">
           <label htmlFor="to">To</label>
