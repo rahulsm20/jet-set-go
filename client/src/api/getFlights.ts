@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const getFlights = async () => {
+const getFlights = async ({from,to}:{from:string,to:string}) => {
   const options = {
     method: "GET",
-    url: "https://timetable-lookup.p.rapidapi.com/TimeTable/BOS/LAX/20230920/",
+    url: `https://timetable-lookup.p.rapidapi.com/TimeTable/${from}/${to}/20230920/`,
     headers: {
       "X-RapidAPI-Key": import.meta.env.VITE_FLIGHT_API_KEY,
       "X-RapidAPI-Host": "timetable-lookup.p.rapidapi.com",
