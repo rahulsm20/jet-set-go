@@ -8,9 +8,10 @@ const HotelResults = () => {
   if (hotelData) {
     HotelCards = hotelData.map((hotel, key) => {
       return (
-        <div
+        <a
           className="grid grid-cols-1 bg-zinc-950 rounded-xl text-xs transition transform duration-500  shadow-md hover:shadow-slate-200 hover:-translate-y-1 hover:scale-105"
           key={key}
+          href={`https://google.com/search?q=${hotel.name}`}
         >
           <img
             src={hotel.photoMainUrl}
@@ -42,7 +43,7 @@ const HotelResults = () => {
               </p>
             </div>
           </div>
-        </div>
+        </a>
       );
     });
   }
