@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Post from "../components/Post";
-import { fetchPopularDestinations } from "../api";
-import NewPostModal from "../components/NewPostModal";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { fetchPopularDestinations } from "../api";
+import Navbar from "../components/Navbar";
+import NewPostModal from "../components/NewPostModal";
+import Post from "../components/Post";
 import { RootState } from "../types";
 
 type PostDataType = {
@@ -21,11 +21,12 @@ type PostDataType = {
 // };
 
 const Home = () => {
-
-  const isAuthenticated = useSelector((state:RootState)=>state.auth.isAuthenticated)
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const [postData, setPostsData] = useState<PostDataType[]>(null || []);
   const [userPostData, setUserPostData] = useState([]);
-  const [loading,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const getPosts = async () => {
     try {
@@ -49,8 +50,7 @@ const Home = () => {
 
   useEffect(() => {
     getPosts();
-    getUserPosts();
-    setLoading(false);
+    getUserPosts().then(() => setLoading(false));
   }, []);
 
   const posts = userPostData.map((post, key) => {
@@ -74,11 +74,16 @@ const Home = () => {
             );
           })}
         </div>
-        {
-          isAuthenticated ?
-        <NewPostModal />: 
-        <Link to="/login" className="btn normal-case btn-transparent bg-slate-200 text-black hover:bg-white rounded-lg">Login to create posts</Link>
-        }
+        {isAuthenticated ? (
+          <NewPostModal />
+        ) : (
+          <Link
+            to="/login"
+            className="btn normal-case btn-transparent bg-slate-200 text-black hover:bg-white rounded-lg"
+          >
+            Login to create posts
+          </Link>
+        )}
         <div className="flex flex-col items-center justify-center md:w-2/4">
           <div className="grid md:grid-cols-1 gap-5 m-10">{posts}</div>
         </div>

@@ -12,7 +12,7 @@ const Flights = () => {
       <Navbar />
       <div className="flex flex-col  gap-5 justify-center items-center">
         <FlightSearch />
-        <div className="md:p-10">
+        <div className="md:p-10 w-1/2">
           {flights.length > 0 ? (
             <div className="flex justify-center items-center md:items-start flex-col gap-5">
               <h1 className="font-light">Results</h1>
