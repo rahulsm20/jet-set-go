@@ -1,12 +1,12 @@
 import React, { FormEvent, useState } from "react";
+import { useDispatch } from "react-redux";
 import getHotels from "../api/getHotels";
 import getLocation from "../api/getLocation";
-import { HotelSearchFormProps, locationDataProps } from "../types";
-import { useDispatch } from "react-redux";
 import { setHotels } from "../store/hotelSlice";
+import { locationDataProps } from "../types";
 
-const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
-  const dispatch = useDispatch()
+const HotelSearchForm = () => {
+  const dispatch = useDispatch();
   const [city, setCity] = useState("");
   const [locationData, setLocationData] = useState<locationDataProps>();
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
     units: "metric",
   });
 
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -30,52 +30,59 @@ const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
     });
   };
 
-  const handleCityChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleCityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setCity(value);
   };
   console.log(city);
 
-  const handleSubmit = async (e:FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const locationData = await getDestinationID(city)
-      setLocationData(locationData)
-      if(locationData){
-        setFormData({
+      const locationData = await getDestinationID(city);
+      setLocationData(locationData);
+      if (locationData) {
+        const queryData = {
           ...formData,
           dest_type: locationData.dest_type,
           dest_id: locationData.dest_id,
-        });
+        };
+        if (locationData?.dest_id && locationData?.dest_type) {
+          getHotelInfo(queryData);
+        }
       }
-      if(formData.dest_id&&formData.dest_type){
-        getHotelInfo();
-      }
-      console.log(formData);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const getDestinationID = async (city:string) => {
+  const getDestinationID = async (city: string) => {
     const locationData = await getLocation(city);
-    console.log(locationData)
-    return locationData
+    return locationData;
   };
 
-  const getHotelInfo = async () => {
-    const hotelData = await getHotels({
-      adults_number: formData.adults_number,
-      checkin_date: formData.checkin_date,
-      dest_id: formData.dest_id,
-      // children_number:formData.children_number,
-      checkout_date: formData.checkout_date,
-      room_number: parseInt(formData.room_number),
-      dest_type: formData.dest_type,
-    });
-    // localStorage.setItem("hotelData", JSON.stringify(hotelData));
-    setHotelData(hotelData);
-    dispatch(setHotels(hotelData))
+  const getHotelInfo = async (formData: any) => {
+    const existingData = localStorage.getItem(`hotelData:${formData.dest_id}`);
+    let hotelData;
+    if (existingData) {
+      dispatch(setHotels(JSON.parse(existingData)));
+    } else {
+      hotelData = await getHotels({
+        adults_number: formData.adults_number,
+        checkin_date: formData.checkin_date,
+        dest_id: formData.dest_id,
+        checkout_date: formData.checkout_date,
+        room_number: parseInt(formData.room_number),
+        dest_type: formData.dest_type,
+      });
+      if (hotelData && hotelData.length > 0) {
+        localStorage.setItem(
+          `hotelData:${formData.dest_id}`,
+          JSON.stringify(hotelData)
+        );
+        dispatch(setHotels(hotelData));
+      }
+    }
   };
 
   return (
@@ -168,18 +175,17 @@ const HotelSearchForm: React.FC<HotelSearchFormProps> = ({ setHotelData }) => {
           </div>
         </form>
       </div>
-      {
-        locationData ? 
+      {locationData ? (
         <div className="flex flex-col gap-5 justify-start items-start mt-5">
-        <h1 className="">{locationData.city_name}</h1>
-        <p className="flex gap-5">
-          Total number of hotels
-          <span>{locationData.hotels}</span>
-        </p>
-      </div>
-      : 
-      <></>
-      }
+          <h1 className="">{locationData.city_name}</h1>
+          <p className="flex gap-5">
+            Total number of hotels
+            <span>{locationData.hotels}</span>
+          </p>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
