@@ -34,8 +34,8 @@ export type FlightDetailsProps = {
 export type RestaurantDetailsType = {
   restaurantData: {
     currentOpenStatusText: string;
-    averageRating:number;
-    userReviewCount:number;
+    averageRating: number;
+    userReviewCount: number;
     establishmentTypeAndCuisineTags: string[];
     heroImgRawHeight: number;
     heroImgRawWidth: number;
@@ -48,14 +48,17 @@ export type RestaurantDetailsType = {
 export type RootState = {
   auth: {
     isAuthenticated: boolean;
-    user:{
-      username:string;
-      user_id:number;
+    user: {
+      username: string;
+      user_id: number;
     };
   };
-  flightData:{
-    flights:[]
-  }
+  flightData: {
+    flights: [];
+  };
+  hotelData: {
+    hotels: HotelDataType[];
+  };
 };
 
 export interface locationDataProps {
@@ -68,17 +71,17 @@ export interface locationDataProps {
 }
 
 export type HotelDataType = {
-    photoMainUrl: string;
-    price: string;
-    name:string;
-    reviewScore:number;
-    reviewScoreWord:string;
-    reviewCount:number;
-    priceBreakdown:{
-      grossPrice:{
-        value:number
-      },
-    },
+  photoMainUrl: string;
+  price: string;
+  name: string;
+  reviewScore: number;
+  reviewScoreWord: string;
+  reviewCount: number;
+  priceBreakdown: {
+    grossPrice: {
+      value: number;
+    };
+  };
 };
 
 export interface HotelSearchFormProps {
@@ -93,10 +96,10 @@ export type DestinationDataType = {
 };
 
 export type HotelResultsType = {
-  hotelData:HotelDataType[]
-}
+  hotelData: HotelDataType[];
+};
 
-export type UserDetails ={
-  username:string,
-  password:string
-}
+export type UserDetails = {
+  username: string;
+  password: string;
+};
