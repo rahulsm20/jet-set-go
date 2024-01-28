@@ -5,7 +5,11 @@ const RestaurantCard = ({ restaurantData }: RestaurantDetailsType) => {
     const tags = restaurantData.establishmentTypeAndCuisineTags;
     const imageURL = parseImageUrl(restaurantData.heroImgUrl);
     return (
-      <div className="bg-zinc-950 flex flex-col gap-5 rounded-2xl shadow-md hover:shadow-primary transition transform duration-500 hover:-translate-y-1 hover:scale-105 h-98 text-xs">
+      <a
+        className="bg-zinc-950 flex flex-col gap-5 rounded-2xl shadow-md hover:shadow-primary transition transform duration-500 hover:-translate-y-1 hover:scale-105 h-98 text-xs"
+        href={`https://google.com/search?q=${restaurantData?.name}`}
+        target="_blank"
+      >
         <img src={imageURL} className="rounded-t-2xl h-1/2 " />
         <div className="p-5 flex flex-col gap-5">
           <div className="flex justify-between">
@@ -45,7 +49,7 @@ const RestaurantCard = ({ restaurantData }: RestaurantDetailsType) => {
             </span>
           )}
         </div>
-      </div>
+      </a>
     );
   }
 };

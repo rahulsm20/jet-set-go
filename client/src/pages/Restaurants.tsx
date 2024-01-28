@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import { getLocation, getRestaurants } from "../api";
 import Navbar from "../components/Navbar";
 import RestaurantCard from "../components/RestaurantCard";
 const Restaurants = () => {
@@ -12,20 +12,21 @@ const Restaurants = () => {
 
   const onSubmit = async (data: FieldValues) => {
     setLoading(true);
+    const existingData = localStorage.getItem(`restaurantData:${data.city}`);
     if (data) {
-      const result = await axios.get(
-        import.meta.env.VITE_SERVER_URL + "/api/location/" + data.city
-      );
-      const restuarantData = await axios.get(
-        import.meta.env.VITE_SERVER_URL + "/api/restaurants/" + result.data
-      );
-      setRestaurants(restuarantData.data);
-      localStorage.setItem(
-        "restaurantData",
-        JSON.stringify(restuarantData.data)
-      );
-      setCity(data.city);
-      console.log(restaurants);
+      if (existingData) {
+        setRestaurants(JSON.parse(existingData));
+      } else {
+        const result = await getLocation(data.city);
+        const restaurantData = await getRestaurants(result.data);
+        localStorage.setItem(
+          `restaurantData:${data.city}`,
+          JSON.stringify(restaurantData.data)
+        );
+        setRestaurants(restaurantData.data);
+        setCity(data.city);
+        console.log(restaurants);
+      }
     }
     setLoading(false);
   };
@@ -82,7 +83,7 @@ const Restaurants = () => {
                     cy="12"
                     r="10"
                     stroke="currentColor"
-                    stroke-width="4"
+                    strokeWidth="4"
                   ></circle>
                   <path
                     className="opacity-75"
